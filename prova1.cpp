@@ -1,4 +1,10 @@
 
+/*
+    Programa que o processo gera 2 filhos e cada filho gera dois netos
+    Autor : Alex Alves
+
+*/
+
 
 
 #include <iostream>
@@ -45,7 +51,23 @@ int main ()
         } 
         else {
             sleep(tempo);
-            cout << " Fim do processo filho 1" << endl;
+            cout << "Sou filho 1 de PID "<< getpid()<< " e vou gerar o neto 1.2 "<< endl;   
+            neto12 = fork();
+            if(neto12==-1) {
+                cout << " Nao criou neto 1.2 " << endl; 
+                exit(1);
+            } 
+            else if(neto12==0) {
+                for(int i =0;i<3*tempo;i++) {
+
+                    cout << "Sou o neto 1.2 de PID "<< getpid()<< " Gerado por "<< getppid() << endl; 
+                }
+
+            }else {
+                sleep(tempo);
+                cout << " Fim do Filho1 " << endl;
+
+            } 
         }
 
     } 
