@@ -19,7 +19,7 @@ int main ()
 {
 
 
-    int tempo=5;
+    int tempo=10;
     pid_t filho1,filho2 , neto11, neto12,neto21,neto22; 
   
     cout << " Sou o processo pai meu pid eh "<< getpid() << endl; 
@@ -119,7 +119,7 @@ int main ()
 
                 else {
                     sleep(tempo);
-                    cout << " Fim do Filho 2 " << endl;
+                    cout << "Fim do Filho 2 " << endl;
                 }
 
             }
