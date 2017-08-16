@@ -86,6 +86,44 @@ int main ()
 
                 cout << "Sou filho 2 de PID "<< getpid()<< " Gerado por "<< getppid() << endl; 
             }
+            
+
+            cout << "Sou filho 2 de PID "<< getpid()<< " e vou gerar o neto 2.1 "<< endl; 
+            neto21 = fork();
+            if(neto21==-1) {
+                cout << " Nao criou neto 2.1 " << endl; 
+                exit(1);
+            } 
+            else if(neto21==0) {
+                for(int i =0;i<3*tempo;i++) {
+
+                    cout << "Sou o neto 2.1 de PID "<< getpid()<< " Gerado por "<< getppid() << endl; 
+                }
+
+            } 
+            else {
+                sleep(tempo);
+                cout << "Sou filho 2 de PID "<< getpid()<< " e vou gerar o neto 2.2 "<< endl;   
+                neto22 = fork();
+                if(neto22==-1) {
+                    cout << " Nao criou neto 2.2 " << endl; 
+                    exit(1);
+                } 
+                else if(neto22==0) {
+                    for(int i =0;i<3*tempo;i++) {
+
+                        cout << "Sou o neto 2.2 de PID "<< getpid()<< " Gerado por "<< getppid() << endl; 
+                    }
+
+                }
+
+                else {
+                    sleep(tempo);
+                    cout << " Fim do Filho 2 " << endl;
+                }
+
+            }
+
 
         } 
         else {
