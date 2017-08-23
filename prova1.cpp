@@ -43,10 +43,11 @@ int main ()
             exit(1);
         } 
         else if(neto11==0) {
-            for(int i =0;i<3*tempo;i++) {
+            for(int i =0;i<tempo;i++) {
 
                 cout << "Sou o neto 1.1 de PID "<< getpid()<< " Gerado por "<< getppid() << endl; 
             }
+            sleep(3*tempo);
 
         } 
         else {
@@ -58,10 +59,11 @@ int main ()
                 exit(1);
             } 
             else if(neto12==0) {
-                for(int i =0;i<3*tempo;i++) {
+                for(int i =0;i<tempo;i++) {
 
                     cout << "Sou o neto 1.2 de PID "<< getpid()<< " Gerado por "<< getppid() << endl; 
                 }
+                sleep(3*tempo);
 
             }else {
                 sleep(tempo);
@@ -86,7 +88,7 @@ int main ()
 
                 cout << "Sou filho 2 de PID "<< getpid()<< " Gerado por "<< getppid() << endl; 
             }
-            
+            sleep(tempo);
 
             cout << "Sou filho 2 de PID "<< getpid()<< " e vou gerar o neto 2.1 "<< endl; 
             neto21 = fork();
@@ -95,10 +97,11 @@ int main ()
                 exit(1);
             } 
             else if(neto21==0) {
-                for(int i =0;i<3*tempo;i++) {
+                for(int i =0;i<tempo;i++) {
 
                     cout << "Sou o neto 2.1 de PID "<< getpid()<< " Gerado por "<< getppid() << endl; 
                 }
+                sleep(3*tempo);
 
             } 
             else {
@@ -110,11 +113,12 @@ int main ()
                     exit(1);
                 } 
                 else if(neto22==0) {
-                    for(int i =0;i<3*tempo;i++) {
+                    for(int i =0;i<tempo;i++) {
 
                         cout << "Sou o neto 2.2 de PID "<< getpid()<< " Gerado por "<< getppid() << endl; 
                     }
 
+                    sleep(3*tempo);
                 }
 
                 else {
