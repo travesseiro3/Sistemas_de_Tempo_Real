@@ -1,5 +1,5 @@
-#Sistemas de Tempo Real
-#Trabalho 2.2 
+# Sistemas de Tempo Real
+# Trabalho 2.2 
 
 
 #Descrição do programa:
