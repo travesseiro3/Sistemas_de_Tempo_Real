@@ -87,10 +87,10 @@ int main()
                     usleep(500000);
                     if(val >1){
                         setpriority(PRIO_PROCESS, filho1, 5);
-  		              std::cout<<" Potenciometro 1 "<<pot1.getFloatValue() << endl;
+  		                  std::cout<<" Potenciometro 1 "<<pot1.getFloatValue() << endl;
                     }else {
-                      setpriority(PRIO_PROCESS, filho1, 19);
-  		                std::cout<<" Potenciometro 1 "<<pot1.getFloatValue() << endl;
+                        setpriority(PRIO_PROCESS, filho1, 19);
+  		                  std::cout<<" Potenciometro 1 "<<pot1.getFloatValue() << endl;
 
                     }
 
@@ -98,16 +98,17 @@ int main()
                         setpriority(PRIO_PROCESS, filho2, 5);
                        	std::cout<<" Potenciometro 2 "<<pot2.getFloatValue() << endl;
   		              }else {
-    	                    setpriority(PRIO_PROCESS, filho2, 19);
-    			                std::cout<<" Potenciometro 2 "<<pot2.getFloatValue() << endl;
+    	                  setpriority(PRIO_PROCESS, filho2, 19);
+    			              std::cout<<" Potenciometro 2 "<<pot2.getFloatValue() << endl;
     	              }
     	              if(val==0 && val2==0){
-      		        		led1.setValue(low);
-      		        	  led2.setValue(low);
-      		        	   break;
+      		        		  led1.setValue(low);
+      		        	    led2.setValue(low);
+                        std::cout<< " Programa finalizado , ate a proxia :) " << endl;
+      		        	    break;
       		        	}
     	          }
-	            std::cout<< " Programa finalizado , ate a proxia :) " << endl;
+	            
         	}
 	         
         }
