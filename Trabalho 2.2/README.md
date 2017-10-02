@@ -68,5 +68,5 @@ ATENÇÃO: Para não queimar a placa, utilizar o pinos exclusivos do ADC (pino V
 
 Gerar vídeo demonstrando os resultados do trabalho. Alterar valores de prioridade dos processos e verificar os seus efeitos.
 
-###Imagem do circuito :
+# Imagem do circuito :
 
