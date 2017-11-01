@@ -2,7 +2,9 @@
 /*
     Autor: Alex Alves
 
-    Programa para rodar 2 threads e esperar seus terminos
+    Programa para calcular o fatorial e a soma
+    cada um em uma thread diferente.
+    
     Para compilar: gcc -o thread2 thread2.c -lpthread
  */
 #include <stdio.h>
