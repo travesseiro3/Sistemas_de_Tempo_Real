@@ -1,8 +1,9 @@
 # Sistemas de Tempo Real
-# Trabalho 2.2 
+
+## Trabalho 2.2 
 
 
-#Descrição do programa:
+### Descrição do programa:
 
  
 
@@ -68,4 +69,8 @@ ATENÇÃO: Para não queimar a placa, utilizar o pinos exclusivos do ADC (pino V
 
 Gerar vídeo demonstrando os resultados do trabalho. Alterar valores de prioridade dos processos e verificar os seus efeitos.
 
-# Imagem do circuito :
+## Imagem do circuito 
+
+![Imagem do circuito](https://github.com/alex7alves/Imagens/blob/master/PSX_20171001_205839.jpg)
+
+
