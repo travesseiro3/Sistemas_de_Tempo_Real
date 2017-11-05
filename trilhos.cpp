@@ -5,7 +5,8 @@
     Autor : Alex Alves
 
     Programa para coordenar ações de treen em trilhos 
-    de 1 a 7 onde ambos os treens não podem estar no trilho 3
+    de 1 a 7 onde ambos os treens não podem estar no trilho 3 
+    representados aqui por 3 e 8 para saber de onde vem.
 
 */
 
@@ -48,17 +49,13 @@ int main() {
             t2=5;
         }
         res = pthread_join(thread_1, &thread_result);
-    res2 = pthread_join(thread_2, &thread_result);
-    if (res != 0 || res2 != 0) {
-        perror("Junção da Thread falhou");
-        exit(EXIT_FAILURE);
-    }
+        res2 = pthread_join(thread_2, &thread_result);
+        if (res != 0 || res2 != 0) {
+            perror("Join falhou");
+            exit(EXIT_FAILURE);
+        }
     }
     
-   
-  
-    
-   
     pthread_mutex_destroy(&work_mutex);  // destruição do multex
     exit(EXIT_SUCCESS);
 }
@@ -75,19 +72,17 @@ void *thread_function(void *arg) {
     }
     
     pthread_mutex_lock(&work_mutex);
-        // threns 1 ou 2 na linha 3
+        // threns 1 ou 2 na linha 3 
         if(*L==1 && t1==3){
-           printf(" Thread %d na linha especial %d\n",*L,t1);
+            printf(" Thread %d na linha especial - 3\n",*L);
             t1++; 
             sleep(1);
         }
         if(*L==2 && t2==8){
-           printf(" Thread %d na linha especial %d\n",*L,t2);
+           printf(" Thread %d na linha especial -3\n",*L);
             t2++; 
             sleep(1);
         }
     pthread_mutex_unlock(&work_mutex);
-       // sleep(1);
-    
     pthread_exit(0);
 }
