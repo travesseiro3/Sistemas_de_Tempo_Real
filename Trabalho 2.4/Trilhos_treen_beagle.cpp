@@ -136,7 +136,7 @@ int main(){
     while(1) {
         // lendo o botao
         val = entrada.getNumericValue();
-        if(val){
+        if(!val){
             Desligar(0);
             std::cout<<" Resetando "<< endl;
             sleep(1);
@@ -144,6 +144,9 @@ int main(){
             //lendo os potenciomentros
             pot1 = potEsquerdo.getFloatValue();
             pot2 = potDireito.getFloatValue();
+            if(pot1==0 && pot2==0){
+                break;
+            }
             if(pot1>0){
                 tempo = 1/pot1;
             }
