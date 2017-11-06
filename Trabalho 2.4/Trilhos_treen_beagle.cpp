@@ -1,3 +1,16 @@
+
+
+/*
+
+    Autor : Alex Alves
+
+    Programa para coordenar ações de treen em trilhos 
+    de 1 a 7 onde ambos os treens não podem estar no trilho 3 
+    representados aqui por 3 e 8 para saber de onde vem.
+
+*/
+
+
 #include <iostream>
 #include <pthread.h>
 #include "BlackGPIO/BlackGPIO.h"
@@ -33,28 +46,28 @@ void Ligar(int n){
 
         case 1:
             a.setValue(high); 
-            sleeṕ(tempo);
+            sleep(tempo);
             break;
         case 2:
             b.setValue(high);
-            sleeṕ(tempo);
+            sleep(tempo);
            break;
         
         case 4:     
             f.setValue(high);
-            sleeṕ(tempo);
+            sleep(tempo);
             break;
         case 5:
             c.setValue(high);
-            sleeṕ(tempo2);
+            sleep(tempo2);
             break;
         case 6:
             d.setValue(high);
-            sleeṕ(tempo2);
+            sleep(tempo2);
             break;
         case 7: 
             e.setValue(high);
-            sleeṕ(tempo2);
+            sleep(tempo2);
             break;
         
     }
@@ -103,7 +116,7 @@ void Desligar(int n){
 
 int main(){
     //Porta digital utilizada para o PushButton
-    BlackGPIO esntrada(GPIO_65, input);
+    BlackGPIO entrada(GPIO_65, input);
     int val;
     float pot1,pot2;
     //para alimentar os potenciômetros, foi utilizado o VCC_ADC e o GNDA_ADC
@@ -126,7 +139,7 @@ int main(){
         if(val){
             Desligar(0);
             std::cout<<" Resetando "<< endl;
-            slee(1);
+            sleep(1);
         }else {
             //lendo os potenciomentros
             pot1 = potEsquerdo.getFloatValue();
