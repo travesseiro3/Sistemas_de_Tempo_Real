@@ -1,236 +1,183 @@
 
-
 /*
-
-    Autor : Alex Alves
-
-    Programa para coordenar ações de treen em trilhos 
+   Programa para coordenar ações de treen em trilhos 
     de 1 a 7 onde ambos os treens não podem estar no trilho 3 
     representados aqui por 3 e 8 para saber de onde vem.
 
+
+    ATENÇÃO : A logica do acendimento dos leds esta trocada devido a montagem do circuito. 
+    Trocou-se o low pelo high
 */
 
-
 #include <iostream>
+#include <unistd.h>
+#include <stdlib.h>
 #include <pthread.h>
 #include "BlackGPIO/BlackGPIO.h"
 #include "ADC/Adc.h"
-#include <stdio.h>
-#include <sys/time.h>
-#include <pthread.h>
-#include <semaphore.h>
-#include <unistd.h> 
-#include <stdlib.h>
-#include <string.h>
+
 using namespace BlackLib;
 
-void *thread_function(void *arg); 
-int t1=1,t2=7;
-pthread_mutex_t work_mutex; 
+//Funcao das threads
+void *thread1_function(void *arg);
+void *thread2_function(void *arg);
+float restrito(float v,float temp,bool valor);
+//Meu mutex
+pthread_mutex_t my_mutex;
+//GPIO outputs
+BlackGPIO Led7(GPIO_26, output);
+BlackGPIO Led6(GPIO_44, output);
+BlackGPIO Led3(GPIO_45, output);
+BlackGPIO Led5(GPIO_66, output);
+BlackGPIO Led1(GPIO_67, output);
+BlackGPIO Led4(GPIO_69, output);
+BlackGPIO Led2(GPIO_68, output);
+//ADCS
+ADC adcLeft(AIN3), adcRight(AIN5);
+//auxiliares
+float upTrain=1, downTrain=5;
 
-//Portas digitais utilizadas no display de 7 segmentos (anodo comum) sem o Dot Point
-BlackGPIO a(GPIO_67, output);
-BlackGPIO b(GPIO_68, output);
-BlackGPIO c(GPIO_66, output);
-BlackGPIO d(GPIO_44, output);
-BlackGPIO e(GPIO_26, output);
-BlackGPIO f(GPIO_69, output);
-BlackGPIO g(GPIO_45, output);
+// O primeiro parametro eh para saber qual led ta aceso
+// O segundo parametro é false se for o trem de baixo e true se for o de cima
+int definirProximo(int atual, bool trem){
 
-float tempo=1,tempo2=1;
+    int proximo;
 
-
-void Ligar(int n){
-    
-    switch(n){
-
-        case 1:
-            a.setValue(low); 
-          //  sleep(tempo);
-            break;
-        case 2:
-            b.setValue(low);
-          //  sleep(tempo);
-           break;
-        
-        case 4:     
-            f.setValue(low);
-          //  sleep(tempo);
-            break;
-        case 5:
-            c.setValue(low);
-           // sleep(tempo2);
-            break;
-        case 6:
-            d.setValue(low);
-            
-            break;
-        case 7: 
-            e.setValue(low);
-           
-            break;
-        
+    if(trem==true && atual<4){
+    proximo = ++atual;
     }
+    else if(trem==true && atual==4){
+    proximo = 1;
+    }
+    else if(trem==false && atual<8){
+    proximo = ++atual;
+    }
+    else if(trem==false && atual==8){
+    proximo = 5;
+    }
+    return proximo;
 }
 
-void Desligar(int n){
-    switch(n){
+int main(int argc, char * argv[]){
 
-        case 0:
-            a.setValue(high); 
-            b.setValue(high); 
-            c.setValue(high); 
-            d.setValue(high); 
-            e.setValue(high); 
-            f.setValue(high); 
-            g.setValue(high); 
-            break;
-        
-        case 1:
-            a.setValue(high); 
-            break;
-        case 2:
-            b.setValue(high);
-           break;
-         case 3:     
-            g.setValue(high);
-            break;
-        case 4:     
-            f.setValue(high);
-            break;
-        case 5:
-            c.setValue(high);
-            break;
-        case 6:
-            d.setValue(high);
-            break;
-        case 7: 
-            e.setValue(high);
-            break;
-         case 8:     
-            g.setValue(high);
-            break;
-        
-    }
-}
-
-int main(){
-    //Porta digital utilizada para o PushButton
-    BlackGPIO entrada(GPIO_65, input);
-     
-    int res,res2,v1=1,v2=2;
-    pthread_t thread_1,thread_2;
+   
+    //Minha thread
+    pthread_t thread1, thread2;
+    int res1, res2;
     void *thread_result;
-    
-    // Iniciar Multex
-    res = pthread_mutex_init(&work_mutex, NULL);
-    if (res != 0) {
-        perror("Iniciação do Mutex falhou");
-        exit(EXIT_FAILURE);
+
+    res1 = pthread_mutex_init(&my_mutex, NULL);
+    if(res1!=0){
+      perror("Iniciacao do Mutex falhou");
+      exit(EXIT_FAILURE);
     }
-    // Criar thread
-            res = pthread_create(&thread_1, NULL, thread_function,&v1);
-            res2 = pthread_create(&thread_2, NULL, thread_function,&v2);
-            if (res != 0 || res2 != 0) {
-                perror("Criação da Thread falhou");
-                exit(EXIT_FAILURE);
-            }
-   // while(1) {
-        // lendo o botao
-      /*  val = entrada.getNumericValue();
-        if(!val){
-            Desligar(0);
-            std::cout<<" Resetando "<< endl;
-            sleep(1);
-        }else {
-           
-            
-           
-            
-            res = pthread_join(thread_1, &thread_result);
-            res2 = pthread_join(thread_2, &thread_result);
-            if (res != 0 || res2 != 0) {
-                perror("Join falhou");
-                exit(EXIT_FAILURE);
-            }**/
-       // }
-    res = pthread_join(thread_1, &thread_result);
-            res2 = pthread_join(thread_2, &thread_result);
-            if (res != 0 || res2 != 0) {
-                perror("Join falhou");
-                exit(EXIT_FAILURE);
-            }
-    
-    
-    pthread_mutex_destroy(&work_mutex);  // destruição do multex
+    res1 = pthread_create(&thread1, NULL, thread1_function, NULL);
+    res2 = pthread_create(&thread2, NULL, thread2_function, NULL);
+    if(res1!=0 || res2!=0){
+      perror("Criacao de alguma thread falhou");
+      exit(EXIT_FAILURE);
+    }
+
+    res1 = pthread_join(thread1, &thread_result);
+    res2 = pthread_join(thread2, &thread_result);
+    if(res1!=0 || res2!=0){
+      perror("Juncao da Thread falhou");
+      exit(EXIT_FAILURE);
+    }
+    pthread_mutex_destroy(&my_mutex);
     exit(EXIT_SUCCESS);
 
+    return 0;
+}
 
-   // return 0;
+void *thread1_function(void *arg){
+
+    float adcL;
+    float tempo=1;
+    while(1){
+      std::cout<<"Thread 1 na linha  "<< upTrain << endl;
+      adcL = adcLeft.getPercentValue();
+      // pra nao dividir por zero
+      if(adcL<=0){adcL=10;}
+      // pra nao ficar 100 segundos esperando caso adc =1
+      if(adcL<20){adcL=20;}
+      tempo =100/adcL;
+      if(upTrain==1){
+        Led1.setValue(low);
+        sleep(tempo);
+        Led1.setValue(high);
+        upTrain = definirProximo(upTrain, true);
+      }
+      else if(upTrain==2){
+        Led2.setValue(low);
+        sleep(tempo);
+        Led2.setValue(high);
+        upTrain = definirProximo(upTrain, true);
+      }
+      else if(upTrain==3){
+        // vai pro mutex
+         upTrain= restrito(upTrain,tempo,true);
+      }
+      else if(upTrain==4){
+        Led4.setValue(low);
+        sleep(tempo);
+        Led4.setValue(high);
+        upTrain = definirProximo(upTrain, true);
+      }
+
+    }
+
+    pthread_exit(0);
+
 }
 
 
-void *thread_function(void *arg) {
-    int val;
-    float pot1,pot2;
-    //para alimentar os potenciômetros, foi utilizado o VCC_ADC e o GNDA_ADC
-    ADC potEsquerdo(AIN3);
-    ADC potDireito(AIN5); 
-    int *L= (int*)arg;
+void *thread2_function(void *arg){
+
+    float adcR;
+    float tempo2=1;
     while(1){
-     //lendo os potenciomentros
-            pot1 = potEsquerdo.getFloatValue();
-            pot2 = potDireito.getFloatValue();
-            std::cout<<"Valor do ADC1  "<< pot1 << endl;
-            std::cout<<"Valor do ADC2  "<< pot2 << endl;
-           /* if(pot1==0 && pot2==0){
-               std::cout<<"acabou "< << endl;
-                break;
-            }*/
-            if(pot1>0){
-                tempo = 1/pot1;
-            }
-            if(pot2>0){
-                tempo2 = 1/pot2;
-            }
-            if(t1>4){
-                t1=1;
-            }
-            if(t2>8){
-                t2=5;
-            }
-    if(*L==1 && t1!=3){
-        std::cout<<"Thread 1 na linha  "<< t1 << endl;
-        Ligar(t1);
-        sleep(tempo);
-        t1++;
-        Desligar(t1);
+      std::cout<<"Thread 2 na linha  "<< downTrain << endl;
+      adcR = adcRight.getPercentValue();
+      // pra nao dividir por zero
+      if(adcR<=0){adcR=10;}
+      // pra nao ficar 100 segundos esperando caso adc =1
+      if(adcR<20){adcR=20; }
+      tempo2=100/adcR;
+      if(downTrain==5){
+        Led5.setValue(low);
+        sleep(tempo2);
+        Led5.setValue(high);
+        downTrain = definirProximo(downTrain, false);
+      }
+      else if(downTrain==6){
+        Led6.setValue(low);
+        sleep(tempo2);
+        Led6.setValue(high);
+        downTrain = definirProximo(downTrain, false);
+      }
+      else if(downTrain==7){
+        Led7.setValue(low);
+        sleep(tempo2);
+        Led7.setValue(high);
+        downTrain = definirProximo(downTrain, false);
+      }
+      else if(downTrain==8){
+         downTrain = restrito(downTrain,tempo2,false);
+      }
+
     }
-    if(*L==2 &&  t2!=8){
-        std::cout<<"Thread 2 na linha  "<< t2 << endl;
-        Ligar(t2);
-         sleep(tempo2);
-        t2++;
-        Desligar(t2);
-    }
-    
-    pthread_mutex_lock(&work_mutex);
-        // threns 1 ou 2 na linha 3 
-        if(*L==1 && t1==3){
-            std::cout<<"Thread 1 na linha  especial  "<< endl;
-            g.setValue(low);          
-            t1++; 
-            sleep(tempo);
-            Desligar(t1);
-        }
-        if(*L==2 && t2==8){
-            std::cout<<"Thread 2 na linha  especial 3 "<< endl;
-            g.setValue(low);
-            t2++; 
-            sleep(tempo2);
-            Desligar(t2);
-        }
-    pthread_mutex_unlock(&work_mutex);
-    }
-    pthread_exit(0);
+
+}
+
+float restrito(float v,float temp,bool valor){
+   pthread_mutex_lock(&my_mutex);
+        std::cout<<"Trilho eslpecial  " << endl;
+        Led3.setValue(low);   
+        sleep(temp);
+        Led3.setValue(high);
+        v= definirProximo(v, valor);
+
+   pthread_mutex_unlock(&my_mutex);
+   return v;
 }
