@@ -1,5 +1,9 @@
 
 /*
+   Autor :
+          Alex Alves
+          Thulio Matheus
+          
    Programa para coordenar ações de treen em trilhos 
     de 1 a 7 onde ambos os treens não podem estar no trilho 3 
     representados aqui por 3 e 8 para saber de onde vem.
