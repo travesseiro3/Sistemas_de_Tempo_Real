@@ -7,7 +7,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <time.h>
-
+#include <pthread.h>
 void *thread_enviar(void *arg);
 void *thread_receber(void *arg);
 int proximo(unsigned short n);
@@ -21,11 +21,11 @@ int main()
     
     int result;
     int res,res2;
-    pthread_t thread_enviar,thread_receber;
+    pthread_t thread_envia,thread_recebe;
     void *thread_result;
 
-    res = pthread_create(&thread_enviar, NULL, thread_enviar,NULL);
-    res2 = pthread_create(&thread_receber, NULL, thread_receber,NULL);
+    res = pthread_create(&thread_envia, NULL, thread_enviar,NULL);
+    res2 = pthread_create(&thread_recebe, NULL, thread_receber,NULL);
     if (res != 0 || res2 != 0) {
         perror("Alguma thread nao foi criada");
         exit(EXIT_FAILURE);
@@ -62,16 +62,15 @@ void *thread_receber(void *arg) {
     socklen_t len_recv;
     struct sockaddr_in address;
     // a porta vira do botao 
-    unsigned short porta = 9701;  // o numero do OUTRO GRUPO AQUI
+    unsigned short porta = 9707;  // o numero do OUTRO GRUPO AQUI
     sockfd  = socket(AF_INET, SOCK_DGRAM,0);  // criacao do socket
     
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = inet_addr(MULTICAST_ADDR);
     address.sin_port = htons(porta);
-    
-    len = sizeof(address);
+
     while(true){
-    	porta = (unsigned short)proximo(porta);
+    	//porta = (unsigned short)proximo(porta);
         recvfrom(sockfd, display,sizeof(display),0,(struct sockaddr *) &address,&len_recv);
         sleep(1);
     }
