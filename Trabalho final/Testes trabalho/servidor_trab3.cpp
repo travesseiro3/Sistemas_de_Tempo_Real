@@ -81,7 +81,7 @@ int main( )
             perror(" erro no RECVFROM( )");
             exit(1);
         }
-        printf(" Valor recebido foi = %2.f e %2.f\n", valor[0], valor[1]);
+        printf(" Valor recebido foi = %.2f e %.2f\n", valor[0], valor[1]);
         // close(server_sockfd);
         
     }
