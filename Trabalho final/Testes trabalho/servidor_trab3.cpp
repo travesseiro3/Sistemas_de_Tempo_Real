@@ -33,7 +33,7 @@ int main( )
     
     struct ip_mreq mreq;  // para endere�o multicast
     
-    unsigned short porta = 9734;
+    unsigned short porta = 9707;
     
     unlink("server_socket");  // remocao de socket antigo
     if ( (server_sockfd = socket(AF_INET, SOCK_DGRAM, 0) )  < 0  )  // cria um novo socket
@@ -65,10 +65,12 @@ int main( )
     printf(" IPPROTO_IP = %d\n", IPPROTO_IP);
     printf(" SOL_SOCKET = %d\n", SOL_SOCKET);
     printf(" IP_ADD_MEMBERSHIP = %d \n", IP_ADD_MEMBERSHIP);
-    
+    float valor[2];
+    valor[0]=0;
+    valor[1]=1;
     
     while(1){
-        int valor;
+        
         
         printf("Servidor esperando ...\n");
         
@@ -79,7 +81,7 @@ int main( )
             perror(" erro no RECVFROM( )");
             exit(1);
         }
-        printf(" Valor recebido foi = %d\n", valor);
+        printf(" Valor recebido foi = %2.f e %2.f\n", valor[0], valor[1]);
         // close(server_sockfd);
         
     }
