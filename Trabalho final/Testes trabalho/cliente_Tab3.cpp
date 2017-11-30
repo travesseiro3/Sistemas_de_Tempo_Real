@@ -10,9 +10,9 @@
 
 void *thread_enviar(void *arg);
 void *thread_receber(void *arg);
-
+int proximo(unsigned short n);
 #define MULTICAST_ADDR "225.0.0.37"
-unsigned short porta = 9707;  // o numero do nosso grupo aqui
+
 float ADCs[2];
 bool *display[8];
 
@@ -39,7 +39,7 @@ void *thread_enviar(void *arg) {
     int sockfd;
     int len;
     struct sockaddr_in address;
-    
+    unsigned short porta = 9707;  // o numero do nosso grupo aqui
     sockfd  = socket(AF_INET, SOCK_DGRAM,0);  // criacao do socket
     
     address.sin_family = AF_INET;
@@ -61,7 +61,8 @@ void *thread_receber(void *arg) {
     int sockfd;
     socklen_t len_recv;
     struct sockaddr_in address;
-    
+    // a porta vira do botao 
+    unsigned short porta = 9701;  // o numero do OUTRO GRUPO AQUI
     sockfd  = socket(AF_INET, SOCK_DGRAM,0);  // criacao do socket
     
     address.sin_family = AF_INET;
@@ -70,8 +71,18 @@ void *thread_receber(void *arg) {
     
     len = sizeof(address);
     while(true){
+    	porta = (unsigned short)proximo(porta);
         recvfrom(sockfd, display,sizeof(display),0,(struct sockaddr *) &address,&len_recv);
         sleep(1);
     }
     close(sockfd);
+}
+int proximo(unsigned short n){
+	int aux = (int)n;
+	if(aux>9712){
+		aux=9701;
+	}else{
+		aux++;
+	}
+	return aux;
 }
