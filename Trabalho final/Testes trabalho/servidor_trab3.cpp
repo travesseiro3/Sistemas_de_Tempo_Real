@@ -146,7 +146,7 @@ int main(){
 
     float media;
     int retorno;
-    bool *vetor = new bool[8];   vetor[0] = true; vetor[1]=true; vetor[2]=true; vetor[3]= true; vetor[4] = false; vetor[5]=false; vetor[6]=false; vetor[7]= false;
+    bool *vetor = new bool[8];
     int server_sockfd;
     u_int yes=1;
     struct sockaddr_in enviador_address, recebedor_address;
@@ -205,17 +205,18 @@ int main(){
         media = media*10;
         retorno = piso(media);
 
-//      	cout << "O valor de retorno é : " << retorno << endl;
-
         Vetorbool(retorno,vetor);
-        //close(server_sockfd);
 
-        sendto(server_sockfd, &vetor, sizeof(vetor), 0, (struct sockaddr *) &recebedor_address, recebedor_len);
+        for(int i=0;i<8;i++){
+            cout << vetor[i] << " ";
+        }
+        cout << endl;
+
+        sendto(server_sockfd, vetor, sizeof(vetor), 0, (struct sockaddr *) &recebedor_address, recebedor_len);
         cout << " o servidor enviou  ";
         for(int i=0;i<8;i++){
             cout << vetor[i] << " ";
         }
         cout << endl;
-        sleep(4);
     }
 }

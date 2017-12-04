@@ -17,7 +17,7 @@ int proximo(unsigned short n);
 #define MULTICAST_ADDR "225.0.0.37"
 
 float ADCs[2];//={0, 1};
-bool display[8];//={true, true, true, true, false, false, false, false};
+bool display[8]={true, true, true, true, false, false, false, false};
 
 int main(){
     
